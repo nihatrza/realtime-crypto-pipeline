@@ -375,30 +375,40 @@ try:
 
     st.divider()
 
-    # Price chart
+    # Separate price charts for each selected cryptocurrency
     st.subheader("Cryptocurrency Price Movement")
 
-    price_chart = px.line(
-        price_data,
-        x="trade_time",
-        y="average_price",
-        color="symbol",
-        title=f"Average Trade Price — {bucket}",
-        labels={
-            "trade_time": "Trade Time (UTC)",
-            "average_price": "Average Price (USDT)",
-            "symbol": "Cryptocurrency"
-        }
-    )
+    price_columns = st.columns(len(selected_symbols))
 
-    price_chart.update_layout(
-        hovermode="x unified"
-    )
+    for column, symbol in zip(price_columns, selected_symbols):
+        symbol_price_data = price_data[
+            price_data["symbol"] == symbol
+        ]
 
-    st.plotly_chart(
-        price_chart,
-        use_container_width=True
-    )
+        with column:
+            if symbol_price_data.empty:
+                st.info(f"No price data available for {symbol}.")
+                continue
+
+            price_chart = px.line(
+                symbol_price_data,
+                x="trade_time",
+                y="average_price",
+                title=f"{symbol.replace('USDT', '')} Average Trade Price — {bucket}",
+                labels={
+                    "trade_time": "Trade Time (UTC)",
+                    "average_price": "Average Price (USDT)"
+                }
+            )
+
+            price_chart.update_layout(
+                hovermode="x unified"
+            )
+
+            st.plotly_chart(
+                price_chart,
+                use_container_width=True
+            )
 
     # Trading value chart
     st.subheader("Trading Activity — USDT")

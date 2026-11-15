@@ -1,3 +1,4 @@
+
 from decimal import Decimal
 import json
 import logging
@@ -121,16 +122,31 @@ def write_parquet_batch(batch, batch_number):
             / f"batch_{batch_timestamp}_{batch_number}.parquet"
         )
 
+        temp_path = file_path.with_suffix(".tmp")
+
         table = pa.Table.from_pylist(
-         records,
-         schema=PARQUET_SCHEMA
+            records,
+            schema=PARQUET_SCHEMA
         )
 
-        pq.write_table(
-            table,
-            file_path,
-            compression="snappy"
-        )
+        try:
+            # Write to temporary file first
+            pq.write_table(
+                table,
+                temp_path,
+                compression="snappy"
+            )
+
+            # Atomically publish the completed Parquet file
+            temp_path.replace(file_path)
+
+        except Exception:
+            temp_path.unlink(missing_ok=True)
+            logger.exception(
+                "Parquet write failed | Symbol: %s",
+                symbol
+            )
+            raise
 
         logger.info(
             "Parquet saved | Symbol: %s | Rows: %s | File: %s",
@@ -139,7 +155,7 @@ def write_parquet_batch(batch, batch_number):
             file_path.name
         )
 
-    # Commit only after all Parquet files are written
+    # Commit Kafka offsets only after all files are written
     consumer.commit(asynchronous=False)
 
     logger.info(
