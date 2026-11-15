@@ -74,6 +74,12 @@ The project focuses not only on data ingestion and transformation, but also on o
 
 ---
 
+## 🎬 Live Dashboard Demo
+
+![Real-Time Crypto Dashboard](assets/dashboard-demo.gif)
+
+---
+
 ## 📌 Project Highlights
 
 | Component | Implementation |
@@ -417,6 +423,34 @@ The Streamlit application provides a unified interface for market analytics and 
 - Parquet Data Lake statistics.
 - Data quality status.
 - System alerts.
+
+### Dashboard Screenshots
+
+#### 1. Dashboard Overview
+
+![Dashboard Overview](assets/dashboard-overview.png)
+
+#### 2. BTC & ETH Price Analytics
+
+![BTC and ETH Price Charts](assets/btc-eth-price-charts.png)
+
+#### 3. Trading & Transaction Activity
+
+![Trading and Transaction Activity](assets/trading-transaction-activity.png)
+
+#### 4. Latest Transactions
+
+![Latest Transactions](assets/latest-transactions.png)
+
+#### 5. Infrastructure Monitoring
+
+![Infrastructure Monitoring](assets/infrastructure-monitoring.png)
+
+#### 6. Data Quality Monitoring
+
+![Data Quality Monitoring](assets/data-quality-monitoring.png)
+
+---
 
 ### Dashboard Architecture
 
